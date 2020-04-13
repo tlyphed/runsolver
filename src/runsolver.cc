@@ -1210,7 +1210,7 @@ int main(int argc, char **argv)
   {
     ios_base::sync_with_stdio();
 
-    while ((optc = getopt_long (argc, argv, "+o:w:v:C:W:M:S:O:d:h", longopts, NULL))
+    while ((optc = getopt_long (argc, argv, "+o:w:v:C:W:V:M:S:O:d:h", longopts, NULL))
 	   != EOF)
     {
       switch (optc)
