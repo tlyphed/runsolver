@@ -23,3 +23,6 @@ runsolver is free software, distributed under the terms of the [GNU] General
 Public License as published by the Free Software Foundation,
 version 3 of the License (or any later version).  For more information,
 see the file LICENSE-GPL-3.0.txt. 
+
+Modified 2020 by Johannes Fichte (johannes.fichte@tu-dresden.de) to make
+runsolver output return code and signal in the optional varfile.

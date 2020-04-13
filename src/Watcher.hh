@@ -321,15 +321,17 @@ public:
     procHistory.dumpHistory(cout,lastDisplayedElapsedTime);
     cout << endl;
 
+    int retcode=WEXITSTATUS(childstatus);
+    int sig=WTERMSIG(childstatus);
     if (WIFEXITED(childstatus))
+    {
       cout << "Child status: " << WEXITSTATUS(childstatus) << endl;
+    }
     else
       if (WIFSIGNALED(childstatus))
       {
-	int sig=WTERMSIG(childstatus);
-	
 	cout << "Child ended because it received signal " 
-	     << sig  << " (" << getSignalName(sig) << ")" << endl;
+	     << WTERMSIG(childstatus) << " (" << getSignalName(WTERMSIG(childstatus)) << ")" << endl;
 	
 #ifdef WCOREDUMP
 	if (WCOREDUMP(childstatus))
@@ -473,7 +475,13 @@ public:
       
         var << "# MEMOUT: did the solver exceed the memory limit?\n"
             << "MEMOUT=" << boolalpha << execSummary.memOut << endl;
-      
+
+        var << "# RETCODE: return code of the program.\n"
+            << "RETCODE=" << retcode << endl;
+
+        var << "# SIGNAL: signal the solver recieved.\n"
+            << "SIGNAL=" << sig << endl;
+
         if(!var.good())
           cout << "failed to save the main statistics in text format\n";
       }
