@@ -1,16 +1,22 @@
-VERSION=3.3.5
+VERSION=3.4.0
 #SVNVERSION=`svnversion .`
-SVNVERSION=$(word 2,$$Rev: 2013 $$)
-#DEBUG=-g
-DEBUG=-O3 -g
+SVNVERSION=$(word 2,$$Rev: 3018 $$)
+DEBUG=-g
+#DEBUG=-O3 -g
 
 STATIC=
 #STATIC=-static 
 
 WSIZE:=$(shell if [ `uname -m` = 'x86_64' ] ; then echo 64; else echo 32; fi )
 
-CFLAGS=-Dtmpdebug -Wall -DVERSION=\"$(VERSION)\" -DSVNVERSION=\"$(SVNVERSION)\" -DWSIZE=$(WSIZE)
-LDFLAGS=-Wl,--build-id $(STATIC)
+CFLAGS=-std=c++11 -DWITH_NUMA -Dtmpdebug -Wall -DVERSION=\"$(VERSION)\" -DSVNVERSION=\"$(SVNVERSION)\" -DWSIZE=$(WSIZE)
+LDFLAGS= $(STATIC) -Wl,--build-id
+LIBS=-lnuma
+
+ifneq ($(findstring alineos.net,$(HOSTNAME)),)
+# if needed, path to the dynamic library we use
+LDFLAGS+=-Wl,-rpath,$(HOME)/tools-centos7/lib64
+endif
 
 SRC=runsolver.cc SignalNames.cc
 OBJ=$(SRC:.cc=.o)
@@ -26,7 +32,7 @@ include $(SRC:.cc=.d)
 	g++ $(CFLAGS) $(DEBUG) -c $*.cc
 
 runsolver: $(OBJ)
-	g++  $(LDFLAGS) $(DEBUG) -o $@ $^ -pthread
+	g++  $(LDFLAGS) $(DEBUG) -o $@ $^ -pthread $(LIBS)
 
 testlimit: testlimit.cc
 	g++ -o testlimit testlimit.cc
