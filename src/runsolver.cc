@@ -538,6 +538,11 @@ public:
     throw runtime_error("unimplemented");
   }
 
+  void setSigInt(bool val)
+  {
+    watcher.setSigInt(val);
+  }
+
   /**
    * delete IPC queues that the solver may have created
    */
@@ -1012,7 +1017,7 @@ void numaInfo()
   cout << "  number of nodes: " << nbNodes << endl;
   for(int i=0;i<nbNodes;++i)
   {
-    mem=numa_node_size(i,&memFree);
+    mem=numa_node_size(i,(long long int*) &memFree);
     mem/=1024*1024;
     memFree/=1024*1024;
     cout << "  memory of node " << i << ": " << mem << " MiB (" << memFree << " MiB free)\n";
@@ -1064,6 +1069,7 @@ static struct option longopts[] =
   {"bin-var", required_argument, NULL, 1009},
   {"version", no_argument, NULL, 1010},
   {"watchdog", required_argument, NULL, 1011},
+  {"sigint", no_argument, NULL, 1012},
   {NULL, no_argument, NULL, 0}
 };
 
@@ -1289,6 +1295,9 @@ int main(int argc, char **argv)
 	break;
       case 1011:
 	watchdogDelay=atoi(optarg);
+  break;
+      case 1012:
+	solver.setSigInt(true);
 	break;
       default:
 	usage (argv[0]);

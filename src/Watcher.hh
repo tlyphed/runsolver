@@ -105,6 +105,9 @@ private:
   bool cleanupAllIPCQueues; // delete all IPC queues that are owned by the user on exit
 
   TimeStamper *timeStamper=nullptr;
+
+  bool useSigint=false;
+
 public:
   Watcher(): procHistory(10)
   {
@@ -241,6 +244,14 @@ public:
   {
     delayBeforeKill=seconds;
   }
+
+  /**
+   * sets watcher to send SIGINT instead of SIGTERM
+   */
+   void setSigInt(bool flag)
+   {
+     useSigint=flag;
+   }
 
 
   void watchPID(pid_t pid)
@@ -619,7 +630,12 @@ public:
 	  displayProcessData();
 
 	  // send SIGTERM
-	  sendSIGTERM();
+    if(useSigint) {
+      sendSIGINT();
+    } else {
+      sendSIGTERM();
+    }
+	  
 
 	  cout << "Sleeping " << delayBeforeKill << " seconds" << endl;
 	}
@@ -762,6 +778,12 @@ protected:
   {
     cout << "\nSending SIGTERM to process tree (bottom up)" << endl;
     procTree->sendSignalBottomUp(SIGTERM);
+  }
+
+  void sendSIGINT()
+  {
+    cout << "\nSending SIGINT to process tree (bottom up)" << endl;
+    procTree->sendSignalBottomUp(SIGINT);
   }
 
   void sendSIGKILL()
