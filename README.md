@@ -1,14 +1,19 @@
 # runsolver
 runsolver by Olivier ROUSSEL
 
-
 see: 
 - http://www.cril.univ-artois.fr/~roussel/rech.php?lang=eng
 - https://www.cril.univ-artois.fr/~roussel/runsolver/
 
 Modified:
 - Varfile contains retcode / signals
+- Additional flag to pass SIGINT instead of SIGTERM
 
+Should compile using make:
+```bash
+cd src
+make
+```
 
 Note that runsolver has plenty of conceptual problems. Use cgroups if available on your system. Benchexec is a fairly 
 good alternative there. However, setup is not easy and require sudo access. So there might still cases where you want
